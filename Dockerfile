@@ -17,7 +17,7 @@ COPY . .
 RUN npm run build
 
 # Expose port (Render will set PORT environment variable)
-EXPOSE $PORT
+EXPOSE 3000
 
-# Start the application
-CMD ["npm", "start"]
+# Start the application with the Express server
+CMD ["node", "server.js"]

@@ -6,7 +6,7 @@ echo "🚀 Starting Baazar Dost build process..."
 
 # Install dependencies
 echo "📦 Installing dependencies..."
-npm ci
+npm ci --legacy-peer-deps
 
 # Build the application
 echo "🔨 Building the application..."

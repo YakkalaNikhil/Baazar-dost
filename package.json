@@ -8,9 +8,11 @@
     "dev": "vite",
     "build": "vite build",
     "lint": "eslint . --ext js,jsx --report-unused-disable-directives --max-warnings 0",
-    "preview": "vite preview",
+    "preview": "vite preview --host 0.0.0.0 --port $PORT",
     "check-setup": "node check-setup.js",
-    "start": "npm run check-setup && npm run dev"
+    "verify-deployment": "node verify-deployment.js",
+    "start": "npm run preview",
+    "postbuild": "echo 'Build completed successfully'"
   },
   "dependencies": {
     "firebase": "^10.7.1",

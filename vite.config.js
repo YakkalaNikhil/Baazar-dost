@@ -8,8 +8,22 @@ export default defineConfig({
     port: 5173,
     host: true
   },
+  preview: {
+    port: process.env.PORT || 3000,
+    host: '0.0.0.0'
+  },
   build: {
     outDir: 'dist',
-    sourcemap: true
+    sourcemap: false,
+    minify: 'terser',
+    rollupOptions: {
+      output: {
+        manualChunks: {
+          vendor: ['react', 'react-dom'],
+          firebase: ['firebase/app', 'firebase/auth', 'firebase/firestore'],
+          ui: ['lucide-react', 'react-toastify']
+        }
+      }
+    }
   }
 })

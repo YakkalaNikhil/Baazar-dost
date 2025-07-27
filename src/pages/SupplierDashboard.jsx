@@ -567,4 +567,17 @@ const SupplierDashboard = () => {
               </p>
             </div>
 
-            <OrderManage
+            <OrderManagement />
+          </div>
+        )}
+
+        {/* Products Tab */}
+        {activeTab === 'products' && (
+          <ProductManagement />
+        )}
+      </div>
+    </div>
+  )
+}
+
+export default SupplierDashboard

@@ -14,6 +14,10 @@ A modern web application empowering Indian street vendors to order raw materials
 - **📄 PDF Invoices** - GST-compliant invoices with jsPDF
 - **📊 Order History** - Track and reorder previous purchases
 - **🎯 Daily Deals** - Special offers and discounts
+- **🎤 Voice Navigation** - Navigate using voice commands in 5 languages
+- **🗣️ Voice Ordering** - Add products to cart using voice with quantity
+- **📦 Bulk Order System** - Advanced bulk ordering with quantity multiplication
+- **🏪 Supplier Dashboard** - Complete order management for suppliers
 
 ## 🚀 Quick Start
 
@@ -178,6 +182,34 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 3. Commit your changes
 4. Push to the branch
 5. Open a Pull Request
+
+## 🚀 Deployment
+
+### Deploy to Render (Recommended)
+
+This project is deployment-ready for Render. See [DEPLOYMENT.md](./DEPLOYMENT.md) for detailed instructions.
+
+**Quick Deploy:**
+1. Fork this repository
+2. Connect to Render
+3. Set environment variables
+4. Deploy!
+
+**Environment Variables Required:**
+```
+VITE_FIREBASE_API_KEY=your_api_key
+VITE_FIREBASE_AUTH_DOMAIN=your_domain
+VITE_FIREBASE_PROJECT_ID=your_project_id
+VITE_FIREBASE_STORAGE_BUCKET=your_bucket
+VITE_FIREBASE_MESSAGING_SENDER_ID=your_sender_id
+VITE_FIREBASE_APP_ID=your_app_id
+```
+
+### Other Deployment Options
+
+- **Vercel**: Use `npm run build` and deploy the `dist` folder
+- **Netlify**: Connect repository and set build command to `npm run build`
+- **Docker**: Use the included `Dockerfile` for containerized deployment
 
 ## 📞 Support
 

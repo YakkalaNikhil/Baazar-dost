@@ -1,0 +1,141 @@
+{
+  "app": {
+    "name": "बाज़ार दोस्त",
+    "tagline": "आपके स्ट्रीट वेंडर का सबसे अच्छा दोस्त"
+  },
+  "auth": {
+    "login": "लॉगिन",
+    "loginWithEmail": "ईमेल से लॉगिन करें",
+    "enterEmail": "अपना ईमेल पता दर्ज करें",
+    "sendLoginLink": "लॉगिन लिंक भेजें",
+    "checkEmail": "लॉगिन लिंक के लिए अपना ईमेल चेक करें",
+    "loginSuccess": "लॉगिन सफल!",
+    "loginError": "लॉगिन असफल। कृपया पुनः प्रयास करें।",
+    "logout": "लॉगआउट",
+    "logoutConfirm": "क्या आप वाकई लॉगआउट करना चाहते हैं?"
+  },
+  "navigation": {
+    "home": "होम",
+    "products": "उत्पाद",
+    "cart": "कार्ट",
+    "orders": "ऑर्डर",
+    "suppliers": "आपूर्तिकर्ता",
+    "profile": "प्रोफाइल"
+  },
+  "language": {
+    "select": "भाषा चुनें",
+    "english": "English",
+    "hindi": "हिंदी",
+    "telugu": "తెలుగు",
+    "tamil": "தமிழ்",
+    "kannada": "ಕನ್ನಡ"
+  },
+  "theme": {
+    "light": "लाइट मोड",
+    "dark": "डार्क मोड",
+    "toggle": "थीम बदलें"
+  },
+  "search": {
+    "placeholder": "उत्पाद खोजें...",
+    "voiceSearch": "आवाज़ से खोजें",
+    "startListening": "आवाज़ से खोज शुरू करें",
+    "stopListening": "आवाज़ से खोज बंद करें",
+    "listening": "सुन रहे हैं...",
+    "noResults": "कोई उत्पाद नहीं मिला",
+    "searchResults": "खोज परिणाम"
+  },
+  "products": {
+    "title": "उत्पाद",
+    "category": "श्रेणी",
+    "price": "कीमत",
+    "unit": "यूनिट",
+    "bulk": "थोक",
+    "addToCart": "कार्ट में डालें",
+    "outOfStock": "स्टॉक में नहीं",
+    "inStock": "स्टॉक में है",
+    "quantity": "मात्रा",
+    "total": "कुल",
+    "names": {
+      "chilli-sauce": "तीखी मिर्च सॉस",
+      "chinese-sauce-kit": "चाइनीज सॉस किट",
+      "sweet-corn-fresh": "ताजा मीठा मक्का",
+      "tata-salt": "टाटा नमक",
+      "regular-salt": "सामान्य नमक",
+      "green-chillies-fresh": "ताजी हरी मिर्च",
+      "curry-leaves-fresh": "ताजे कड़ी पत्ते",
+      "coriander-leaves-fresh": "ताजा धनिया पत्ता",
+      "green-peas-fresh": "ताजी हरी मटर",
+      "maida-flour": "मैदा (रिफाइंड आटा)",
+      "corn-flour": "मक्का का आटा"
+    }
+  },
+  "cart": {
+    "title": "शॉपिंग कार्ट",
+    "empty": "आपका कार्ट खाली है",
+    "item": "वस्तु",
+    "quantity": "मात्रा",
+    "price": "कीमत",
+    "total": "कुल",
+    "remove": "हटाएं",
+    "clear": "कार्ट साफ़ करें",
+    "checkout": "चेकआउट",
+    "subtotal": "उप-योग",
+    "tax": "कर (जीएसटी)",
+    "grandTotal": "कुल योग"
+  },
+  "orders": {
+    "title": "ऑर्डर इतिहास",
+    "orderNumber": "ऑर्डर #",
+    "date": "तारीख",
+    "status": "स्थिति",
+    "amount": "राशि",
+    "reorder": "फिर से ऑर्डर करें",
+    "viewDetails": "विवरण देखें",
+    "downloadInvoice": "इनवॉइस डाउनलोड करें",
+    "noOrders": "कोई ऑर्डर नहीं मिला",
+    "pending": "लंबित",
+    "confirmed": "पुष्ट",
+    "delivered": "डिलीवर",
+    "cancelled": "रद्द"
+  },
+  "suppliers": {
+    "title": "नजदीकी आपूर्तिकर्ता",
+    "distance": "दूरी",
+    "rating": "रेटिंग",
+    "contact": "संपर्क",
+    "viewProducts": "उत्पाद देखें",
+    "noSuppliers": "नजदीक कोई आपूर्तिकर्ता नहीं मिला",
+    "enableLocation": "नजदीकी आपूर्तिकर्ता खोजने के लिए लोकेशन चालू करें"
+  },
+  "deals": {
+    "title": "आज के ऑफर",
+    "discount": "% छूट",
+    "limited": "सीमित समय",
+    "viewAll": "सभी ऑफर देखें"
+  },
+  "common": {
+    "loading": "लोड हो रहा है...",
+    "error": "त्रुटि",
+    "success": "सफल",
+    "cancel": "रद्द करें",
+    "confirm": "पुष्टि करें",
+    "save": "सेव करें",
+    "edit": "संपादित करें",
+    "delete": "हटाएं",
+    "back": "वापस",
+    "next": "अगला",
+    "previous": "पिछला",
+    "close": "बंद करें",
+    "retry": "पुनः प्रयास करें",
+    "refresh": "रीफ्रेश करें"
+  },
+  "notifications": {
+    "cartAdded": "वस्तु कार्ट में जोड़ी गई",
+    "cartRemoved": "वस्तु कार्ट से हटाई गई",
+    "orderPlaced": "ऑर्डर सफलतापूर्वक दिया गया",
+    "orderCancelled": "ऑर्डर रद्द किया गया",
+    "profileUpdated": "प्रोफाइल सफलतापूर्वक अपडेट किया गया",
+    "locationEnabled": "लोकेशन एक्सेस चालू किया गया",
+    "locationDenied": "लोकेशन एक्सेस अस्वीकार किया गया"
+  }
+}

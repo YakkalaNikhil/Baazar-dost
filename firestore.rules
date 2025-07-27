@@ -1,0 +1,66 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // Users can read and write their own user document
+    match /users/{userId} {
+      allow read, write: if request.auth != null && request.auth.uid == userId;
+    }
+    
+    // Users can read and write their own orders
+    match /orders/{orderId} {
+      allow read, write: if request.auth != null && 
+        request.auth.uid == resource.data.userId;
+      allow create: if request.auth != null && 
+        request.auth.uid == request.resource.data.userId;
+    }
+    
+    // Users can read and write their own cart items
+    match /carts/{userId} {
+      allow read, write: if request.auth != null && request.auth.uid == userId;
+    }
+    
+    // Products are readable by all authenticated users
+    match /products/{productId} {
+      allow read: if request.auth != null;
+      // Only admins can write products (add admin check here if needed)
+      allow write: if false; // Disable for now, enable with admin role
+    }
+    
+    // Categories are readable by all authenticated users
+    match /categories/{categoryId} {
+      allow read: if request.auth != null;
+      allow write: if false; // Admin only
+    }
+    
+    // Suppliers are readable by all authenticated users
+    match /suppliers/{supplierId} {
+      allow read: if request.auth != null;
+      allow write: if false; // Admin only
+    }
+    
+    // Daily deals are readable by all authenticated users
+    match /deals/{dealId} {
+      allow read: if request.auth != null;
+      allow write: if false; // Admin only
+    }
+    
+    // User preferences and settings
+    match /userPreferences/{userId} {
+      allow read, write: if request.auth != null && request.auth.uid == userId;
+    }
+    
+    // Reviews can be read by all, written by authenticated users
+    match /reviews/{reviewId} {
+      allow read: if request.auth != null;
+      allow create: if request.auth != null &&
+        request.auth.uid == request.resource.data.userId;
+      allow update, delete: if request.auth != null &&
+        request.auth.uid == resource.data.userId;
+    }
+
+    // Test collection for debugging and authentication testing
+    match /test/{testId} {
+      allow read, write: if request.auth != null;
+    }
+  }
+}

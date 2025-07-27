@@ -1,0 +1,141 @@
+{
+  "app": {
+    "name": "Baazar Dost",
+    "tagline": "Your Street Vendor's Best Friend"
+  },
+  "auth": {
+    "login": "Login",
+    "loginWithEmail": "Login with Email",
+    "enterEmail": "Enter your email address",
+    "sendLoginLink": "Send Login Link",
+    "checkEmail": "Check your email for the login link",
+    "loginSuccess": "Login successful!",
+    "loginError": "Login failed. Please try again.",
+    "logout": "Logout",
+    "logoutConfirm": "Are you sure you want to logout?"
+  },
+  "navigation": {
+    "home": "Home",
+    "products": "Products",
+    "cart": "Cart",
+    "orders": "Orders",
+    "suppliers": "Suppliers",
+    "profile": "Profile"
+  },
+  "language": {
+    "select": "Select Language",
+    "english": "English",
+    "hindi": "हिंदी",
+    "telugu": "తెలుగు",
+    "tamil": "தமிழ்",
+    "kannada": "ಕನ್ನಡ"
+  },
+  "theme": {
+    "light": "Light Mode",
+    "dark": "Dark Mode",
+    "toggle": "Toggle Theme"
+  },
+  "search": {
+    "placeholder": "Search for products...",
+    "voiceSearch": "Voice Search",
+    "startListening": "Start Voice Search",
+    "stopListening": "Stop Voice Search",
+    "listening": "Listening...",
+    "noResults": "No products found",
+    "searchResults": "Search Results"
+  },
+  "products": {
+    "title": "Products",
+    "category": "Category",
+    "price": "Price",
+    "unit": "Unit",
+    "bulk": "Bulk",
+    "addToCart": "Add to Cart",
+    "outOfStock": "Out of Stock",
+    "inStock": "In Stock",
+    "quantity": "Quantity",
+    "total": "Total",
+    "names": {
+      "chilli-sauce": "Spicy Chilli Sauce",
+      "chinese-sauce-kit": "Chinese Sauce Kit",
+      "sweet-corn-fresh": "Fresh Sweet Corn",
+      "tata-salt": "Tata Salt",
+      "regular-salt": "Regular Salt",
+      "green-chillies-fresh": "Fresh Green Chillies",
+      "curry-leaves-fresh": "Fresh Curry Leaves",
+      "coriander-leaves-fresh": "Fresh Coriander Leaves",
+      "green-peas-fresh": "Fresh Green Peas",
+      "maida-flour": "Refined Wheat Flour (Maida)",
+      "corn-flour": "Corn Flour"
+    }
+  },
+  "cart": {
+    "title": "Shopping Cart",
+    "empty": "Your cart is empty",
+    "item": "Item",
+    "quantity": "Quantity",
+    "price": "Price",
+    "total": "Total",
+    "remove": "Remove",
+    "clear": "Clear Cart",
+    "checkout": "Checkout",
+    "subtotal": "Subtotal",
+    "tax": "Tax (GST)",
+    "grandTotal": "Grand Total"
+  },
+  "orders": {
+    "title": "Order History",
+    "orderNumber": "Order #",
+    "date": "Date",
+    "status": "Status",
+    "amount": "Amount",
+    "reorder": "Reorder",
+    "viewDetails": "View Details",
+    "downloadInvoice": "Download Invoice",
+    "noOrders": "No orders found",
+    "pending": "Pending",
+    "confirmed": "Confirmed",
+    "delivered": "Delivered",
+    "cancelled": "Cancelled"
+  },
+  "suppliers": {
+    "title": "Nearby Suppliers",
+    "distance": "Distance",
+    "rating": "Rating",
+    "contact": "Contact",
+    "viewProducts": "View Products",
+    "noSuppliers": "No suppliers found nearby",
+    "enableLocation": "Enable location to find nearby suppliers"
+  },
+  "deals": {
+    "title": "Today's Deals",
+    "discount": "% OFF",
+    "limited": "Limited Time",
+    "viewAll": "View All Deals"
+  },
+  "common": {
+    "loading": "Loading...",
+    "error": "Error",
+    "success": "Success",
+    "cancel": "Cancel",
+    "confirm": "Confirm",
+    "save": "Save",
+    "edit": "Edit",
+    "delete": "Delete",
+    "back": "Back",
+    "next": "Next",
+    "previous": "Previous",
+    "close": "Close",
+    "retry": "Retry",
+    "refresh": "Refresh"
+  },
+  "notifications": {
+    "cartAdded": "Item added to cart",
+    "cartRemoved": "Item removed from cart",
+    "orderPlaced": "Order placed successfully",
+    "orderCancelled": "Order cancelled",
+    "profileUpdated": "Profile updated successfully",
+    "locationEnabled": "Location access enabled",
+    "locationDenied": "Location access denied"
+  }
+}

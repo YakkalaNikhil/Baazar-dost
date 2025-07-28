@@ -14,6 +14,7 @@ import LoadingSpinner from './components/UI/LoadingSpinner'
 import ErrorBoundary from './components/ErrorBoundary/ErrorBoundary'
 import Header from './components/Layout/Header'
 import FirebaseDebug from './components/Debug/FirebaseDebug'
+import AuthStatus from './components/Debug/AuthStatus'
 
 // Pages
 import HomePage from './pages/HomePage'
@@ -46,6 +47,16 @@ function AppContent() {
   const { user, userProfile, loading } = useAuth()
   const { i18n } = useTranslation()
   const [isInitialized, setIsInitialized] = useState(false)
+
+  // Debug logging for authentication state
+  useEffect(() => {
+    console.log('🔍 App Auth State:', {
+      user: user ? { uid: user.uid, email: user.email } : null,
+      userProfile: userProfile ? { role: userProfile.role, name: userProfile.name } : null,
+      loading,
+      isInitialized
+    })
+  }, [user, userProfile, loading, isInitialized])
 
   useEffect(() => {
     // Initialize app
@@ -189,6 +200,7 @@ function App() {
         <AuthProvider>
           <CartProvider>
             <AppContent />
+            <AuthStatus />
             <FirebaseDebug />
           </CartProvider>
         </AuthProvider>

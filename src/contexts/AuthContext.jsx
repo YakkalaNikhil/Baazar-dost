@@ -37,18 +37,31 @@ export const AuthProvider = ({ children }) => {
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (firebaseUser) => {
       try {
+        console.log('🔄 Auth state changed:', firebaseUser ? 'User signed in' : 'User signed out')
+
         if (firebaseUser) {
+          console.log('👤 User details:', {
+            uid: firebaseUser.uid,
+            email: firebaseUser.email,
+            displayName: firebaseUser.displayName,
+            photoURL: firebaseUser.photoURL
+          })
+
           setUser(firebaseUser)
+          console.log('📋 Loading user profile...')
           await loadUserProfile(firebaseUser.uid)
+          console.log('✅ User profile loaded successfully')
         } else {
+          console.log('👋 User signed out')
           setUser(null)
           setUserProfile(null)
         }
       } catch (error) {
-        console.error('Auth state change error:', error)
+        console.error('❌ Auth state change error:', error)
         toast.error('Authentication error occurred')
       } finally {
         setLoading(false)
+        console.log('🏁 Auth loading completed')
       }
     })
 
@@ -87,6 +100,43 @@ export const AuthProvider = ({ children }) => {
     } catch (error) {
       console.error('Error loading user profile:', error)
       toast.error('Failed to load user profile')
+    }
+  }
+
+  const createOrUpdateGoogleUserProfile = async (user) => {
+    try {
+      const userDoc = await getDoc(doc(db, 'users', user.uid))
+
+      const profileData = {
+        email: user.email,
+        name: user.displayName,
+        photoURL: user.photoURL,
+        provider: 'google',
+        updatedAt: serverTimestamp(),
+        preferences: {
+          language: 'en',
+          theme: 'light',
+          notifications: true
+        }
+      }
+
+      if (userDoc.exists()) {
+        // Update existing profile
+        await setDoc(doc(db, 'users', user.uid), profileData, { merge: true })
+        console.log('✅ Updated existing user profile')
+      } else {
+        // Create new profile
+        profileData.createdAt = serverTimestamp()
+        profileData.role = 'customer' // Default role for new Google users
+        await setDoc(doc(db, 'users', user.uid), profileData)
+        console.log('✅ Created new user profile')
+      }
+
+      // Load the updated profile
+      await loadUserProfile(user.uid)
+    } catch (error) {
+      console.error('Error creating/updating Google user profile:', error)
+      toast.error('Failed to create user profile')
     }
   }
 
@@ -238,6 +288,9 @@ export const AuthProvider = ({ children }) => {
       console.log('🆔 UID:', user.uid)
       console.log('🔍 Full User Object:', user)
 
+      // Create or update user profile with Google data
+      await createOrUpdateGoogleUserProfile(user)
+
       toast.success(`Welcome ${user.displayName}! Successfully signed in with Google.`)
       return { success: true, user }
 
@@ -295,6 +348,10 @@ export const AuthProvider = ({ children }) => {
         const user = result.user
         console.log('🔄 Google Redirect Sign-In Successful!')
         console.log('👤 Display Name:', user.displayName)
+
+        // Create or update user profile with Google data
+        await createOrUpdateGoogleUserProfile(user)
+
         toast.success(`Welcome ${user.displayName}! Signed in via redirect.`)
         return { success: true, user }
       }

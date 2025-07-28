@@ -48,8 +48,19 @@ const FirebaseDebug = () => {
       <div className="space-y-1">
         <div><strong>Environment:</strong> {debugInfo.environment}</div>
         <div><strong>Host:</strong> {debugInfo.host}</div>
+        <div><strong>Full URL:</strong> {typeof window !== 'undefined' ? window.location.origin : 'N/A'}</div>
         <div><strong>Auth State:</strong> {debugInfo.authState}</div>
       </div>
+
+      {debugInfo.host.includes('onrender.com') && (
+        <div className="mt-2 p-2 bg-yellow-800 rounded text-yellow-200">
+          <strong>⚠️ Add this domain to Firebase:</strong>
+          <div className="font-mono text-xs mt-1">{debugInfo.host}</div>
+          <div className="text-xs mt-1">
+            Go to Firebase Console → Authentication → Settings → Authorized domains
+          </div>
+        </div>
+      )}
 
       <div className="mt-2">
         <strong>Environment Variables:</strong>

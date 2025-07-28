@@ -16,10 +16,8 @@
     "postbuild": "echo 'Build completed successfully'"
   },
   "dependencies": {
-    "compression": "^1.8.1",
     "express": "^4.21.2",
     "firebase": "^10.7.1",
-    "helmet": "^7.2.0",
     "i18next": "^23.16.8",
     "i18next-browser-languagedetector": "^7.2.2",
     "jspdf": "^2.5.1",

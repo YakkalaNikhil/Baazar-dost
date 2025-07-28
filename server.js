@@ -1,8 +1,7 @@
 import express from 'express';
 import { fileURLToPath } from 'url';
 import { dirname, join } from 'path';
-import compression from 'compression';
-import helmet from 'helmet';
+import { existsSync } from 'fs';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -10,50 +9,65 @@ const __dirname = dirname(__filename);
 const app = express();
 const port = process.env.PORT || 3000;
 
-// Security middleware
-app.use(helmet({
-  contentSecurityPolicy: {
-    directives: {
-      defaultSrc: ["'self'"],
-      scriptSrc: ["'self'", "'unsafe-inline'", "'unsafe-eval'", "https://apis.google.com", "https://www.gstatic.com"],
-      styleSrc: ["'self'", "'unsafe-inline'", "https://fonts.googleapis.com"],
-      fontSrc: ["'self'", "https://fonts.gstatic.com"],
-      imgSrc: ["'self'", "data:", "https:", "blob:"],
-      connectSrc: ["'self'", "https:", "wss:", "ws:"],
-      mediaSrc: ["'self'", "blob:"],
-      objectSrc: ["'none'"],
-      frameSrc: ["'self'", "https:"],
-    },
-  },
-  crossOriginEmbedderPolicy: false
-}));
+console.log('🚀 Starting Baazar Dost server...');
+console.log('📁 Current directory:', __dirname);
+console.log('🌐 Port:', port);
+console.log('🌍 Environment:', process.env.NODE_ENV || 'development');
 
-// Compression middleware
-app.use(compression());
+// Check if dist directory exists
+const distPath = join(__dirname, 'dist');
+console.log('📂 Dist path:', distPath);
+console.log('📂 Dist exists:', existsSync(distPath));
+
+// Basic middleware
+app.use(express.json({ limit: '10mb' }));
+app.use(express.urlencoded({ extended: true, limit: '10mb' }));
+
+// CORS headers for development
+app.use((req, res, next) => {
+  res.header('Access-Control-Allow-Origin', '*');
+  res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
+  res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept, Authorization');
+
+  if (req.method === 'OPTIONS') {
+    res.sendStatus(200);
+  } else {
+    next();
+  }
+});
 
 // Serve static files from dist directory
-app.use(express.static(join(__dirname, 'dist'), {
-  maxAge: '1y',
-  etag: true,
-  lastModified: true,
-  setHeaders: (res, path) => {
-    // Set cache headers for different file types
-    if (path.endsWith('.html')) {
-      res.setHeader('Cache-Control', 'no-cache');
-    } else if (path.match(/\.(js|css|png|jpg|jpeg|gif|ico|svg)$/)) {
-      res.setHeader('Cache-Control', 'public, max-age=31536000, immutable');
-    }
-  }
-}));
+if (existsSync(distPath)) {
+  console.log('✅ Serving static files from dist directory');
+  app.use(express.static(distPath, {
+    maxAge: '1d',
+    etag: true,
+    lastModified: true
+  }));
+} else {
+  console.error('❌ Dist directory not found!');
+}
 
 // Health check endpoint
 app.get('/health', (req, res) => {
+  console.log('🏥 Health check requested');
   res.status(200).json({
     status: 'healthy',
     timestamp: new Date().toISOString(),
     uptime: process.uptime(),
     environment: process.env.NODE_ENV || 'development',
-    version: '1.0.0'
+    version: '1.0.0',
+    distExists: existsSync(join(__dirname, 'dist')),
+    indexExists: existsSync(join(__dirname, 'dist', 'index.html'))
+  });
+});
+
+// Simple test endpoint
+app.get('/api/test', (req, res) => {
+  console.log('🧪 Test endpoint requested');
+  res.json({
+    message: 'Baazar Dost API is working!',
+    timestamp: new Date().toISOString()
   });
 });
 
@@ -75,7 +89,15 @@ app.get('/api/info', (req, res) => {
 
 // Handle client-side routing - serve index.html for all non-API routes
 app.get('*', (req, res) => {
-  res.sendFile(join(__dirname, 'dist', 'index.html'));
+  const indexPath = join(__dirname, 'dist', 'index.html');
+  console.log('📄 Serving index.html for:', req.path);
+
+  if (existsSync(indexPath)) {
+    res.sendFile(indexPath);
+  } else {
+    console.error('❌ index.html not found at:', indexPath);
+    res.status(500).send('Application not built properly. Please check build process.');
+  }
 });
 
 // Error handling middleware

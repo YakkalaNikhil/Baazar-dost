@@ -207,14 +207,21 @@ export const AuthProvider = ({ children }) => {
     }
   }
 
-  const signInWithGoogle = async (method = 'popup') => {
+  const signInWithGoogle = async (method = 'popup', retryWithRedirect = true) => {
     try {
       setLoading(true)
       let result
 
       if (method === 'popup') {
         console.log('🚀 Starting Google Sign-In with Popup...')
-        result = await signInWithPopup(auth, googleProvider)
+
+        // Add timeout for popup
+        const popupPromise = signInWithPopup(auth, googleProvider)
+        const timeoutPromise = new Promise((_, reject) =>
+          setTimeout(() => reject(new Error('popup-timeout')), 30000)
+        )
+
+        result = await Promise.race([popupPromise, timeoutPromise])
       } else {
         console.log('🔄 Starting Google Sign-In with Redirect...')
         await signInWithRedirect(auth, googleProvider)
@@ -237,17 +244,32 @@ export const AuthProvider = ({ children }) => {
     } catch (error) {
       console.error('❌ Google Sign-In Error:', error)
 
+      // Auto-retry with redirect for popup issues
+      if (method === 'popup' && retryWithRedirect && (
+        error.code === 'auth/popup-closed-by-user' ||
+        error.code === 'auth/popup-blocked' ||
+        error.code === 'auth/cancelled-popup-request' ||
+        error.message === 'popup-timeout'
+      )) {
+        console.log('🔄 Popup failed, trying redirect method...')
+        toast.info('Popup blocked or closed. Trying redirect method...')
+        return await signInWithGoogle('redirect', false)
+      }
+
       let errorMessage = 'Failed to sign in with Google'
 
       switch (error.code) {
         case 'auth/popup-closed-by-user':
-          errorMessage = 'Sign-in popup was closed. Please try again.'
+          errorMessage = 'Sign-in popup was closed. Trying redirect method...'
           break
         case 'auth/popup-blocked':
-          errorMessage = 'Popup was blocked by browser. Please allow popups and try again.'
+          errorMessage = 'Popup was blocked by browser. Trying redirect method...'
           break
         case 'auth/cancelled-popup-request':
-          errorMessage = 'Sign-in was cancelled. Please try again.'
+          errorMessage = 'Sign-in was cancelled. Trying redirect method...'
+          break
+        case 'popup-timeout':
+          errorMessage = 'Popup timed out. Trying redirect method...'
           break
         case 'auth/network-request-failed':
           errorMessage = 'Network error. Please check your internet connection.'

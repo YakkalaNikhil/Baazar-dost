@@ -15,6 +15,7 @@ import ErrorBoundary from './components/ErrorBoundary/ErrorBoundary'
 import Header from './components/Layout/Header'
 import FirebaseDebug from './components/Debug/FirebaseDebug'
 import AuthStatus from './components/Debug/AuthStatus'
+import CartMathTest from './components/Debug/CartMathTest'
 
 // Pages
 import HomePage from './pages/HomePage'
@@ -201,6 +202,7 @@ function App() {
           <CartProvider>
             <AppContent />
             <AuthStatus />
+            <CartMathTest />
             <FirebaseDebug />
           </CartProvider>
         </AuthProvider>

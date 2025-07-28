@@ -142,37 +142,46 @@ export const CartProvider = ({ children }) => {
           bulkMultiplier = selectedQuantityNumber
           actualQuantity = quantity * bulkMultiplier
           pricePerUnit = selectedPrice / selectedQuantityNumber
-          itemPrice = selectedPrice // Total price for the selected quantity
+          itemPrice = selectedPrice // Price per bulk unit (e.g., per 5kg pack)
           itemUnit = selectedQuantityOption
           displayName = `${product.name} (${selectedQuantityOption})`
 
           console.log(`Bulk order: ${quantity} × ${selectedQuantityOption} = ${actualQuantity} pieces`)
           console.log(`Price: ₹${selectedPrice} per ${selectedQuantityOption} (₹${pricePerUnit.toFixed(2)} per piece)`)
+          console.log(`Total for this item: ₹${(pricePerUnit * actualQuantity).toFixed(2)}`)
         } else if (product.selectedPrice && product.selectedQuantity) {
           // Use quantity-based pricing (from product detail/listing pages)
           const quantityNumber = parseInt(product.selectedQuantity.split(' ')[0]) || 1
           bulkMultiplier = quantityNumber
           actualQuantity = quantity * bulkMultiplier
           pricePerUnit = product.selectedPrice / quantityNumber
-          itemPrice = product.selectedPrice
+          itemPrice = product.selectedPrice // Price per bulk unit
           itemUnit = product.selectedQuantity
           displayName = `${product.name} (${product.selectedQuantity})`
 
           console.log(`Selected bulk: ${quantity} × ${product.selectedQuantity} = ${actualQuantity} pieces`)
-          console.log(`Price: ₹${product.selectedPrice} per ${product.selectedQuantity}`)
+          console.log(`Price: ₹${product.selectedPrice} per ${product.selectedQuantity} (₹${pricePerUnit.toFixed(2)} per piece)`)
+          console.log(`Total for this item: ₹${(pricePerUnit * actualQuantity).toFixed(2)}`)
         } else if (orderType === 'bulk') {
           // Use bulk pricing
-          itemPrice = product.bulkPrice || product.unitPrice
+          itemPrice = product.bulkPrice || product.unitPrice || product.price
           itemUnit = product.bulkUnit || product.unit
           bulkMultiplier = product.minBulkQuantity || 1
           actualQuantity = quantity * bulkMultiplier
           pricePerUnit = itemPrice / bulkMultiplier
           displayName = `${product.name} (Bulk: ${bulkMultiplier} ${product.unit})`
+
+          console.log(`Bulk pricing: ${quantity} × ${bulkMultiplier} = ${actualQuantity} pieces`)
+          console.log(`Price: ₹${itemPrice} per bulk unit (₹${pricePerUnit.toFixed(2)} per piece)`)
+          console.log(`Total for this item: ₹${(pricePerUnit * actualQuantity).toFixed(2)}`)
         } else {
           // Use unit pricing
           itemPrice = product.unitPrice || product.price
           itemUnit = product.unit
           pricePerUnit = itemPrice
+          actualQuantity = quantity // For unit orders, actual quantity = quantity
+
+          console.log(`Unit pricing: ${quantity} × ₹${itemPrice} = ₹${(itemPrice * quantity).toFixed(2)}`)
         }
 
         const cartItem = {
@@ -244,6 +253,13 @@ export const CartProvider = ({ children }) => {
         if (item.cartKey === cartKey) {
           // Recalculate actual quantity based on bulk multiplier
           const newActualQuantity = newQuantity * (item.bulkMultiplier || 1)
+
+          console.log(`Updating quantity for ${item.name}:`)
+          console.log(`  - New quantity: ${newQuantity}`)
+          console.log(`  - Bulk multiplier: ${item.bulkMultiplier || 1}`)
+          console.log(`  - New actual quantity: ${newActualQuantity}`)
+          console.log(`  - New total: ₹${getItemTotal({...item, quantity: newQuantity, actualQuantity: newActualQuantity}).toFixed(2)}`)
+
           return {
             ...item,
             quantity: newQuantity,
@@ -255,7 +271,7 @@ export const CartProvider = ({ children }) => {
 
       setCartItems(newCartItems)
       await saveCart(newCartItems)
-      
+
       return { success: true }
     } catch (error) {
       console.error('Error updating quantity:', error)
@@ -280,14 +296,33 @@ export const CartProvider = ({ children }) => {
 
   const getCartTotal = () => {
     return cartItems.reduce((total, item) => {
-      const itemTotal = item.price * item.quantity
-      console.log(`Cart item: ${item.name}, Price: ₹${item.price}, Quantity: ${item.quantity}, Total: ₹${itemTotal}`)
+      const itemTotal = getItemTotal(item)
+
+      console.log(`Cart item: ${item.name}`)
+      console.log(`  - Order type: ${item.orderType}`)
+      console.log(`  - Price: ₹${item.price}, Quantity: ${item.quantity}`)
+      console.log(`  - Bulk multiplier: ${item.bulkMultiplier}`)
+      console.log(`  - Actual quantity: ${item.actualQuantity}`)
+      console.log(`  - Price per unit: ₹${item.pricePerUnit || 'N/A'}`)
+      console.log(`  - Item total: ₹${itemTotal.toFixed(2)}`)
+
       return total + itemTotal
     }, 0)
   }
 
   const getCartItemCount = () => {
     return cartItems.reduce((count, item) => count + item.quantity, 0)
+  }
+
+  // Helper function to get correct item total
+  const getItemTotal = (item) => {
+    if (item.bulkMultiplier > 1 && item.pricePerUnit) {
+      // For bulk orders: use pricePerUnit × actualQuantity
+      return item.pricePerUnit * item.actualQuantity
+    } else {
+      // For regular orders: use price × quantity
+      return item.price * item.quantity
+    }
   }
 
   const getTaxAmount = (subtotal) => {
@@ -317,6 +352,7 @@ export const CartProvider = ({ children }) => {
     clearCart,
     getCartTotal,
     getCartItemCount,
+    getItemTotal,
     getTaxAmount,
     getCartSummary,
     isEmpty: cartItems.length === 0

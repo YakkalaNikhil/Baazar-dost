@@ -29,6 +29,7 @@ const CartPage = () => {
     removeFromCart,
     clearCart,
     getCartSummary,
+    getItemTotal,
     isEmpty
   } = useCart()
   const [isCheckingOut, setIsCheckingOut] = useState(false)
@@ -303,12 +304,18 @@ const CartPage = () => {
                   {/* Price & Remove */}
                   <div className="text-right">
                     <div className="font-bold text-lg text-gray-900 dark:text-white">
-                      ₹{(item.price * item.quantity).toFixed(2)}
+                      ₹{getItemTotal(item).toFixed(2)}
                     </div>
                     {/* Show price breakdown for bulk orders */}
                     {item.bulkMultiplier > 1 && item.pricePerUnit && (
                       <div className="text-xs text-gray-500">
-                        ₹{item.pricePerUnit.toFixed(2)} × {item.actualQuantity}
+                        ₹{item.pricePerUnit.toFixed(2)} × {item.actualQuantity} pieces
+                      </div>
+                    )}
+                    {/* Show unit price breakdown for regular orders */}
+                    {item.bulkMultiplier <= 1 && (
+                      <div className="text-xs text-gray-500">
+                        ₹{item.price} × {item.quantity}
                       </div>
                     )}
                     <button

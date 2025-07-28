@@ -35,8 +35,25 @@ googleProvider.setCustomParameters({
 console.log('🔥 Firebase initialized with config:', {
   projectId: firebaseConfig.projectId,
   authDomain: firebaseConfig.authDomain,
-  apiKey: firebaseConfig.apiKey ? '***' + firebaseConfig.apiKey.slice(-4) : 'missing'
+  apiKey: firebaseConfig.apiKey ? '***' + firebaseConfig.apiKey.slice(-4) : 'missing',
+  environment: import.meta.env.NODE_ENV || 'development',
+  host: typeof window !== 'undefined' ? window.location.host : 'server'
 })
+
+// Validate required environment variables
+const requiredEnvVars = [
+  'VITE_FIREBASE_API_KEY',
+  'VITE_FIREBASE_AUTH_DOMAIN',
+  'VITE_FIREBASE_PROJECT_ID',
+  'VITE_FIREBASE_APP_ID'
+]
+
+const missingVars = requiredEnvVars.filter(varName => !import.meta.env[varName])
+if (missingVars.length > 0) {
+  console.error('❌ Missing required Firebase environment variables:', missingVars)
+} else {
+  console.log('✅ All required Firebase environment variables are set')
+}
 
 // Initialize Analytics (only in production)
 let analytics = null

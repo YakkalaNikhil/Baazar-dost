@@ -13,6 +13,7 @@ import { CartProvider } from './contexts/CartContext'
 import LoadingSpinner from './components/UI/LoadingSpinner'
 import ErrorBoundary from './components/ErrorBoundary/ErrorBoundary'
 import Header from './components/Layout/Header'
+import FirebaseDebug from './components/Debug/FirebaseDebug'
 
 // Pages
 import HomePage from './pages/HomePage'
@@ -188,6 +189,7 @@ function App() {
         <AuthProvider>
           <CartProvider>
             <AppContent />
+            <FirebaseDebug />
           </CartProvider>
         </AuthProvider>
       </ThemeProvider>

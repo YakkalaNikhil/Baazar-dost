@@ -13,8 +13,8 @@ import { CartProvider } from './contexts/CartContext'
 import LoadingSpinner from './components/UI/LoadingSpinner'
 import ErrorBoundary from './components/ErrorBoundary/ErrorBoundary'
 import Header from './components/Layout/Header'
-import FirebaseDebug from './components/Debug/FirebaseDebug'
-import AuthStatus from './components/Debug/AuthStatus'
+
+
 import CartMathTest from './components/Debug/CartMathTest'
 import AccountSetup from './components/Auth/AccountSetup'
 
@@ -242,9 +242,7 @@ function App() {
         <AuthProvider>
           <CartProvider>
             <AppContent />
-            <AuthStatus />
             <CartMathTest />
-            <FirebaseDebug />
           </CartProvider>
         </AuthProvider>
       </ThemeProvider>

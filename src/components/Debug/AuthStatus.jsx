@@ -4,10 +4,8 @@ import { useAuth } from '../../contexts/AuthContext';
 const AuthStatus = () => {
   const { user, userProfile, loading } = useAuth();
 
-  // Only show in development or when there are issues
-  if (import.meta.env.PROD && user && userProfile) {
-    return null;
-  }
+  // Component disabled - return null to never show
+  return null;
 
   return (
     <div className="fixed top-4 left-4 bg-blue-900 text-white p-3 rounded-lg shadow-lg max-w-sm text-xs z-50">

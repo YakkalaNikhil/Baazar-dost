@@ -1,9 +1,11 @@
-const express = require('express');
-const path = require('path');
-const compression = require('compression');
-const helmet = require('helmet');
+import express from 'express';
+import { fileURLToPath } from 'url';
+import { dirname, join } from 'path';
+import compression from 'compression';
+import helmet from 'helmet';
 
-const __dirname = path.resolve();
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
 
 const app = express();
 const port = process.env.PORT || 3000;
@@ -30,7 +32,7 @@ app.use(helmet({
 app.use(compression());
 
 // Serve static files from dist directory
-app.use(express.static(path.join(__dirname, 'dist'), {
+app.use(express.static(join(__dirname, 'dist'), {
   maxAge: '1y',
   etag: true,
   lastModified: true,
@@ -73,7 +75,7 @@ app.get('/api/info', (req, res) => {
 
 // Handle client-side routing - serve index.html for all non-API routes
 app.get('*', (req, res) => {
-  res.sendFile(path.join(__dirname, 'dist', 'index.html'));
+  res.sendFile(join(__dirname, 'dist', 'index.html'));
 });
 
 // Error handling middleware

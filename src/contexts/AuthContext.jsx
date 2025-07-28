@@ -81,25 +81,51 @@ export const AuthProvider = ({ children }) => {
     try {
       const userDoc = await getDoc(doc(db, 'users', userId))
       if (userDoc.exists()) {
-        setUserProfile(userDoc.data())
+        const profileData = userDoc.data()
+        setUserProfile(profileData)
+        console.log('✅ User profile loaded:', profileData)
       } else {
-        // Create new user profile
-        const newProfile = {
-          email: auth.currentUser?.email,
-          createdAt: serverTimestamp(),
-          updatedAt: serverTimestamp(),
-          preferences: {
-            language: 'en',
-            theme: 'light',
-            notifications: true
-          }
-        }
-        await setDoc(doc(db, 'users', userId), newProfile)
-        setUserProfile(newProfile)
+        console.log('⚠️ No user profile found for:', userId)
+        setUserProfile(null) // Set to null to trigger account setup
       }
     } catch (error) {
       console.error('Error loading user profile:', error)
       toast.error('Failed to load user profile')
+      setUserProfile(null)
+    }
+  }
+
+  const createUserProfile = async (profileData) => {
+    try {
+      if (!auth.currentUser) {
+        throw new Error('No authenticated user')
+      }
+
+      const userId = auth.currentUser.uid
+      const completeProfile = {
+        ...profileData,
+        uid: userId,
+        email: profileData.email || auth.currentUser.email,
+        photoURL: auth.currentUser.photoURL,
+        provider: auth.currentUser.providerData[0]?.providerId || 'email',
+        createdAt: serverTimestamp(),
+        updatedAt: serverTimestamp(),
+        preferences: {
+          language: 'en',
+          theme: 'light',
+          notifications: true
+        },
+        accountSetupCompleted: true
+      }
+
+      await setDoc(doc(db, 'users', userId), completeProfile)
+      setUserProfile(completeProfile)
+      console.log('✅ User profile created successfully')
+
+      return { success: true }
+    } catch (error) {
+      console.error('Error creating user profile:', error)
+      throw error
     }
   }
 
@@ -107,36 +133,30 @@ export const AuthProvider = ({ children }) => {
     try {
       const userDoc = await getDoc(doc(db, 'users', user.uid))
 
-      const profileData = {
-        email: user.email,
-        name: user.displayName,
-        photoURL: user.photoURL,
-        provider: 'google',
-        updatedAt: serverTimestamp(),
-        preferences: {
-          language: 'en',
-          theme: 'light',
-          notifications: true
-        }
-      }
-
       if (userDoc.exists()) {
-        // Update existing profile
-        await setDoc(doc(db, 'users', user.uid), profileData, { merge: true })
-        console.log('✅ Updated existing user profile')
-      } else {
-        // Create new profile
-        profileData.createdAt = serverTimestamp()
-        profileData.role = 'customer' // Default role for new Google users
-        await setDoc(doc(db, 'users', user.uid), profileData)
-        console.log('✅ Created new user profile')
-      }
+        // Update existing profile with latest Google data
+        const updateData = {
+          email: user.email,
+          name: user.displayName,
+          photoURL: user.photoURL,
+          provider: 'google',
+          updatedAt: serverTimestamp()
+        }
 
-      // Load the updated profile
-      await loadUserProfile(user.uid)
+        await setDoc(doc(db, 'users', user.uid), updateData, { merge: true })
+        console.log('✅ Updated existing user profile with Google data')
+
+        // Load the updated profile
+        await loadUserProfile(user.uid)
+      } else {
+        // Don't automatically create profile - let user go through setup
+        console.log('⚠️ New Google user - will need account setup')
+        setUserProfile(null) // This will trigger account setup flow
+      }
     } catch (error) {
-      console.error('Error creating/updating Google user profile:', error)
-      toast.error('Failed to create user profile')
+      console.error('Error handling Google user profile:', error)
+      toast.error('Failed to load user profile')
+      setUserProfile(null)
     }
   }
 
@@ -406,6 +426,7 @@ export const AuthProvider = ({ children }) => {
     loading,
     sendLoginLink,
     signInWithGoogle,
+    createUserProfile,
     checkGoogleRedirectResult,
     signOut,
     updateUserProfile,

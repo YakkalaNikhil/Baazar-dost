@@ -16,6 +16,7 @@ import Header from './components/Layout/Header'
 import FirebaseDebug from './components/Debug/FirebaseDebug'
 import AuthStatus from './components/Debug/AuthStatus'
 import CartMathTest from './components/Debug/CartMathTest'
+import AccountSetup from './components/Auth/AccountSetup'
 
 // Pages
 import HomePage from './pages/HomePage'
@@ -48,6 +49,8 @@ function AppContent() {
   const { user, userProfile, loading } = useAuth()
   const { i18n } = useTranslation()
   const [isInitialized, setIsInitialized] = useState(false)
+  const [showAccountSetup, setShowAccountSetup] = useState(false)
+  const [allowGuestAccess, setAllowGuestAccess] = useState(false)
 
   // Debug logging for authentication state
   useEffect(() => {
@@ -55,9 +58,11 @@ function AppContent() {
       user: user ? { uid: user.uid, email: user.email } : null,
       userProfile: userProfile ? { role: userProfile.role, name: userProfile.name } : null,
       loading,
-      isInitialized
+      isInitialized,
+      showAccountSetup,
+      allowGuestAccess
     })
-  }, [user, userProfile, loading, isInitialized])
+  }, [user, userProfile, loading, isInitialized, showAccountSetup, allowGuestAccess])
 
   useEffect(() => {
     // Initialize app
@@ -79,11 +84,45 @@ function AppContent() {
     initializeApp()
   }, [i18n])
 
+  // Handle account setup flow
+  useEffect(() => {
+    if (!loading && isInitialized) {
+      // Check if we need to show account setup
+      if (user && userProfile === null && !allowGuestAccess) {
+        console.log('👤 User authenticated but no profile - showing account setup')
+        setShowAccountSetup(true)
+      } else {
+        setShowAccountSetup(false)
+      }
+    }
+  }, [loading, isInitialized, user, userProfile, allowGuestAccess])
+
+  const handleAccountSetupComplete = () => {
+    setShowAccountSetup(false)
+    console.log('✅ Account setup completed')
+  }
+
+  const handleAccountSetupSkip = () => {
+    setShowAccountSetup(false)
+    setAllowGuestAccess(true)
+    console.log('⏭️ Account setup skipped - allowing guest access')
+  }
+
   if (loading || !isInitialized) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-gray-50 dark:bg-gray-900">
         <LoadingSpinner size="large" />
       </div>
+    )
+  }
+
+  // Show account setup if needed
+  if (showAccountSetup) {
+    return (
+      <AccountSetup
+        onComplete={handleAccountSetupComplete}
+        onSkip={handleAccountSetupSkip}
+      />
     )
   }
 
@@ -105,13 +144,15 @@ function AppContent() {
             <Route
               path="/"
               element={user ? (
-                userProfile?.role === 'supplier' ? <SupplierDashboard /> : <HomePage />
+                (userProfile?.role === 'supplier' || (userProfile === null && allowGuestAccess)) ?
+                  (userProfile?.role === 'supplier' ? <SupplierDashboard /> : <HomePage />) :
+                  <HomePage />
               ) : <Navigate to="/login" replace />}
             />
             <Route
               path="/products"
-              element={user ? (
-                userProfile?.role === 'supplier' ? <Navigate to="/" replace /> : <ProductsPage />
+              element={user || allowGuestAccess ? (
+                (userProfile?.role === 'supplier' && userProfile !== null) ? <Navigate to="/" replace /> : <ProductsPage />
               ) : <Navigate to="/login" replace />}
             />
             <Route
@@ -120,8 +161,8 @@ function AppContent() {
             />
             <Route
               path="/cart"
-              element={user ? (
-                userProfile?.role === 'supplier' ? <Navigate to="/" replace /> : <CartPage />
+              element={user || allowGuestAccess ? (
+                (userProfile?.role === 'supplier' && userProfile !== null) ? <Navigate to="/" replace /> : <CartPage />
               ) : <Navigate to="/login" replace />}
             />
             <Route

@@ -16,6 +16,7 @@
     "register": "Register",
     "logout": "Logout",
     "email": "Email Address",
+    "enterEmail": "Enter your email address",
     "password": "Password",
     "forgotPassword": "Forgot Password?",
     "signInWithEmail": "Sign in with Email",

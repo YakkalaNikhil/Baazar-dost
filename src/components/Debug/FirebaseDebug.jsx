@@ -42,7 +42,7 @@ const FirebaseDebug = () => {
   }
 
   return (
-    <div className="fixed bottom-4 right-4 bg-gray-900 text-white p-4 rounded-lg shadow-lg max-w-md text-xs z-50">
+    <div className="fixed bottom-4 right-4 bg-gray-900 text-white p-4 rounded-lg shadow-lg max-w-sm text-xs z-50 min-w-80">
       <h3 className="font-bold mb-2">🔧 Firebase Debug Info</h3>
       
       <div className="space-y-1">
